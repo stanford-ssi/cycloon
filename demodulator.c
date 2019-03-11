@@ -7,9 +7,9 @@
 #define SYMBOL_LEN 8
 #define THRESHHOLD 3
 
-analogRead() {return 0;}
+int analogRead() {return 0;}
 
-read_samples(int * samples) {
+void read_samples(int * samples) {
     for (int i = 0; i > FILTER_LEN; i++) samples[i] = analogRead();
 }
 
@@ -25,7 +25,7 @@ unsigned int get_bit0_intensity() {
     return abs(cos0) + abs(sin0);
 }
 
-get_intensity(unsigned int * bit0, unsigned int * bit1) {
+void get_intensity(unsigned int * bit0, unsigned int * bit1) {
     int s[FILTER_LEN];
     read_samples(s);
     int sin0, cos0, sin1, cos1 = 0;
@@ -40,7 +40,7 @@ get_intensity(unsigned int * bit0, unsigned int * bit1) {
     *bit1 = abs(cos1) + abs(sin1);
 }
 
-wait_for_packet() {
+void wait_for_packet() {
     /* This must be changed if you change SYMBOL_LEN */
     unsigned char change = 0;
     int window[SYMBOL_LEN];
@@ -57,18 +57,6 @@ wait_for_packet() {
         last_window = curr_window;
         index++;
         if (index == SYMBOL_LEN) index = 0;
-    }
-}
-
-
-get_packet(unsigned char * packet) {
-    while(1) {
-        wait_for_packet();
-        for (int i = 0; i < PACKET_MAX_LEN; i++) {
-            int flag = get_byte(&packet[i]);
-            if (flag == -1) break;
-            if (flag == 1) return;
-        }
     }
 }
 
@@ -94,3 +82,15 @@ int get_byte(unsigned char * dest) {
     *dest = res;
     return 0;
 }
+
+void get_packet(unsigned char * packet) {
+    while(1) {
+        wait_for_packet();
+        for (int i = 0; i < PACKET_MAX_LEN; i++) {
+            int flag = get_byte(&packet[i]);
+            if (flag == -1) break;
+            if (flag == 1) return;
+        }
+    }
+}
+
