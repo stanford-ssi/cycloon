@@ -18,7 +18,7 @@ unsigned int get_bit0_intensity() {
     read_samples(s);
     int sin0, cos0 = 0;
     for (int i = 0; i < FILTER_LEN >> 3; i++) {
-        int idx = i * 8;
+        int idx = i << 3;
         cos0 = cos0 + s[idx] + s[idx+1] - s[idx + 3] - s[idx + 4] - s[idx + 5] + s[idx + 7];
         sin0 = sin0 + s[idx+1] + s[idx+2] + s[idx + 3] - s[idx + 5] - s[idx + 6] - s[idx + 7];
     }
@@ -30,6 +30,7 @@ get_intensity(unsigned int * bit0, unsigned int * bit1) {
     read_samples(s);
     int sin0, cos0, sin1, cos1 = 0;
     for (int i = 0; i < FILTER_LEN >> 3; i++) {
+        int idx = i << 3;
         cos0 = cos0 + s[idx] + s[idx+1] - s[idx + 3] - s[idx + 4] - s[idx + 5] + s[idx + 7];
         sin0 = sin0 + s[idx+1] + s[idx+2] + s[idx + 3] - s[idx + 5] - s[idx + 6] - s[idx + 7];
         cos1 = cos1 + s[idx] - s[idx+2] + s[idx+4] - s[idx+6];
