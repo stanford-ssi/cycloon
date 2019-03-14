@@ -16,10 +16,55 @@ for period in periods:
     file.close()
     os.system("./demodulator test.txt > " + str(64) + "onebit" + str(period))
 '''
-
+'''
 file = open("test.txt", "w")
 
-for i in range(1000):
+for i in range(62):
     file.write(str(0) + "\n")
-for i in range(1000):
-    file.write(str(int((math.cos(i*2*math.pi/8) + 1* math.cos(i*2*math.pi/4)) * amplitude))  + "\n")
+for j in range(2):
+    for i in range(64 * 8):
+        file.write(str(int(math.sin(i*2*math.pi/8)    ))  + "\n")
+    for i in range(64 * 8):
+        file.write(str(int(math.sin(i*2*math.pi/4)   ))  + "\n")
+
+for j in range(10):
+    file.write(str(int(math.cos(i*2*math.pi/8) + math.cos(i*2*math.pi/8) / 8))  + "\n")
+
+
+
+file = open("test.txt", "w")
+'''
+
+for k in range(1, 32):
+    file = open("test.txt", "w")
+
+    for i in range(k):
+        file.write(str(0) + "\n")
+
+    for j in range(2):
+        for i in range(64 * 8):
+            file.write(str(int(math.sin(i*2*math.pi/8)  * amplitude  ))  + "\n")
+        for i in range(64 * 8):
+            file.write(str(int(math.sin(i*2*math.pi/4)  * amplitude ))  + "\n")
+
+    for j in range(10):
+        file.write(str(int(math.cos(i*2*math.pi/8) + math.cos(i*2*math.pi/8) / 8))  + "\n")
+
+
+    file.close()
+    os.system("./demodulator test.txt > offset" + str(k))
+
+'''
+
+for i in range(62):
+    file.write(str(0) + "\n")
+
+for j in range(2):
+    for i in range(64 * 8):
+        file.write(str(int(math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
+    for i in range(64 * 8):
+        file.write(str(int(math.sin(i*2*math.pi/4)  * amplitude ))  + "\n")
+
+for j in range(10):
+    file.write(str(int(math.cos(i*2*math.pi/8) + math.cos(i*2*math.pi/8) / 8))  + "\n")
+'''

@@ -39,7 +39,7 @@ void get_intensity(unsigned int * bit0, unsigned int * bit1) {
     }
     *bit0 = abs(cos0) + abs(sin0);
     *bit1 = abs(cos1) + abs(sin1);
-    printf("Bit0:1 at the filter level %u %u\n", *bit0, *bit1);
+    //printf("Bit0:1 at the filter level %u %u\n", *bit0, *bit1);
 }
 
 void wait_for_packet() {
@@ -78,7 +78,7 @@ int get_byte(unsigned char * dest) {
         }
         unsigned int bit0 = bit0_raw / bit1_raw;
         unsigned int bit1 = bit1_raw / bit0_raw;
-        printf("%u, : %u\n", bit0_raw, bit1_raw);
+        printf("%u, %u\n", bit0_raw, bit1_raw);
         res <<= 1;
         if (bit1 > THRESHHOLD) res |= 0x1;
         else if (bit0 < THRESHHOLD) return 1;
@@ -93,6 +93,7 @@ void get_packet(unsigned char * packet) {
         wait_for_packet();
         for (int i = 0; i < PACKET_MAX_LEN; i++) {
             int flag = get_byte(&packet[i]);
+          //  printf("flag: %d\n", flag);
             if (flag == -1) break;
             if (flag == 1) return;
         }
