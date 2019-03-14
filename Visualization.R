@@ -63,5 +63,12 @@ plot(strength~f, data=onebit, type='l', col='red', ylim=c(0, max(zerobit$strengt
 lines(strength~f, data=zerobit, type='l', col='blue')
 legend("topleft", legend=c("One Bit", "Zero Bit"), col=c("red", "blue"), lty=1)
 
-
+dataaa <- data.table()
+for(i in 1:31) {
+  d <- fread(paste0("offset",i))
+  names(d) <- c("y1","y2")
+  dataaa <- rbind(dataaa, cbind(offset=i, d))
+}
+plot(y1 ~ offset, data=dataaa, type='l', col='red', ylim=c(0, max(dataaa$y2)))
+lines(y2 ~ offset, data=dataaa, col='blue')
 
