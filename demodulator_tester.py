@@ -41,7 +41,7 @@ for k in range(1, 32):
     for i in range(k):
         file.write(str(0) + "\n")
 
-    for j in range(2):
+    for j in range(1):
         for i in range(64 * 8):
             file.write(str(int(math.sin(i*2*math.pi/8)  * amplitude  ))  + "\n")
         for i in range(64 * 8):
