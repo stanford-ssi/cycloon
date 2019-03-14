@@ -31,7 +31,7 @@ for j in range(10):
     file.write(str(int(math.cos(i*2*math.pi/8) + math.cos(i*2*math.pi/8) / 8))  + "\n")
 
 
-
+'''
 file = open("test.txt", "w")
 '''
 
@@ -56,15 +56,30 @@ for k in range(1, 32):
 
 '''
 
-for i in range(62):
+for i in range(0):
     file.write(str(0) + "\n")
 
-for j in range(2):
-    for i in range(64 * 8):
-        file.write(str(int(math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
-    for i in range(64 * 8):
-        file.write(str(int(math.sin(i*2*math.pi/4)  * amplitude ))  + "\n")
+for i in range(64 * 8):
+    file.write(str(int(math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
 
-for j in range(10):
-    file.write(str(int(math.cos(i*2*math.pi/8) + math.cos(i*2*math.pi/8) / 8))  + "\n")
-'''
+
+message = 'hey it works!!!!'
+
+
+for char in message:
+    char = ord(char)
+    for i in range(8):
+        mask = 0x80
+        
+        if mask & char:
+            for i in range(64 * 8):
+                file.write(str(int(math.sin(i*2*math.pi/4)   * amplitude ))  + "\n")
+    
+        else:
+            for i in range(64 * 8):
+                file.write(str(int(math.sin(i*2*math.pi/8)  * amplitude ))  + "\n")
+        
+        char <<= 1
+
+for i in range(5000):
+    file.write(str(int(math.sin(i*2*math.pi/8) * amplitude ))  + "\n")

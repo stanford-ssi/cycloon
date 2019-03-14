@@ -8,10 +8,10 @@ static FILE* fp;
 int main(int argc, char** argv) {
     fp = fopen(argv[1], "r");
     unsigned char packet[PACKET_MAX_LEN];
-    printf("%s", packet);
+    //printf("%s", packet);
     
     get_packet(packet);
-    printf("%s", packet);
+    printf("%s\n", packet);
     return 0;
 
 }

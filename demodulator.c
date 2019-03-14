@@ -63,7 +63,7 @@ void wait_for_packet() {
     }
 }
 
-/* 0 means continue; 1 means ERR; -1 means EOM */
+/* 0 means continue; 1 means EOM; -1 means ERR */
 int get_byte(unsigned char * dest) {
     
     unsigned char res = 0;
@@ -76,14 +76,14 @@ int get_byte(unsigned char * dest) {
             bit0_raw += window0[i];
             bit1_raw += window1[i];
         }
-        unsigned int bit0 = bit0_raw / bit1_raw;
-        unsigned int bit1 = bit1_raw / bit0_raw;
-        printf("%u, %u\n", bit0_raw, bit1_raw);
+        unsigned int bit0 = bit0_raw / (bit1_raw + 1);
+        unsigned int bit1 = bit1_raw / (bit0_raw + 1);
+      //  printf("%u, %u\n", bit0_raw, bit1_raw);
         res <<= 1;
         if (bit1 > THRESHHOLD) res |= 0x1;
-        else if (bit0 < THRESHHOLD) return 1;
+        else if (bit0 < THRESHHOLD) return -1;
     }
-    if (res == 0) return -1;
+    if (res == 0) return 1;
     *dest = res;
     return 0;
 }
@@ -93,9 +93,9 @@ void get_packet(unsigned char * packet) {
         wait_for_packet();
         for (int i = 0; i < PACKET_MAX_LEN; i++) {
             int flag = get_byte(&packet[i]);
-          //  printf("flag: %d\n", flag);
-            if (flag == -1) break;
-            if (flag == 1) return;
+       //     printf("\n", flag);
+            if (flag > 0) return;
+            if (flag < 0) break;
         }
     }
 }
