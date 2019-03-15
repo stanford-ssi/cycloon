@@ -1,7 +1,7 @@
 import math
 import os
 
-amplitude = 100
+amplitude = 1000
 
 
 #for i in range(1000):
@@ -56,14 +56,14 @@ for k in range(1, 32):
 
 '''
 
-for i in range(0):
+for i in range(15):
     file.write(str(0) + "\n")
 
 for i in range(64 * 8):
-    file.write(str(int(math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
+    file.write(str(int(amplitude + math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
 
 
-message = 'hey it works!!!!'
+message = 'EE26N IS THE BEST INTROSEM EVER'
 
 
 for char in message:
@@ -73,13 +73,13 @@ for char in message:
         
         if mask & char:
             for i in range(64 * 8):
-                file.write(str(int(math.sin(i*2*math.pi/4)   * amplitude ))  + "\n")
+                file.write(str(int(amplitude + math.sin(i*2*math.pi/4)   * amplitude ))  + "\n")
     
         else:
             for i in range(64 * 8):
-                file.write(str(int(math.sin(i*2*math.pi/8)  * amplitude ))  + "\n")
+                file.write(str(int(amplitude + math.sin(i*2*math.pi/8)  * amplitude ))  + "\n")
         
         char <<= 1
 
 for i in range(5000):
-    file.write(str(int(math.sin(i*2*math.pi/8) * amplitude ))  + "\n")
+    file.write(str(int(amplitude + math.sin(i*2*math.pi/8) * amplitude ))  + "\n")
