@@ -69,6 +69,8 @@ for(i in 1:31) {
   names(d) <- c("y1","y2")
   dataaa <- rbind(dataaa, cbind(offset=i, d))
 }
+dataaa$ratio <- dataaa$y2/dataaa$y1
 plot(y1 ~ offset, data=dataaa, type='l', col='red', ylim=c(0, max(dataaa$y2)))
 lines(y2 ~ offset, data=dataaa, col='blue')
+plot(log(ratio) ~ offset, data=dataaa, type='l')
 
