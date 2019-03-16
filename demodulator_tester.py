@@ -1,8 +1,7 @@
 import math
 import os
 
-amplitude = 1000
-
+amplitude = 100
 
 #for i in range(1000):
 #    file.write(str(0) + "\n")
@@ -55,16 +54,19 @@ for k in range(1, 32):
     os.system("./demodulator test.txt > offset" + str(k))
 
 '''
+symbol_len = 8
 
-for i in range(15):
+for i in range(64 * symbol_len + 32):
     file.write(str(0) + "\n")
 
-for i in range(64 * 8):
+for i in range(64 * symbol_len ):
     file.write(str(int(amplitude + math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
 
+for i in range(64 * symbol_len ):
+    file.write(str(0)+ "\n")
 
-message = 'EE26N IS THE BEST INTROSEM EVER'
-
+message = 'KF5MZO'
+print(len(message))
 
 for char in message:
     char = ord(char)
@@ -72,14 +74,14 @@ for char in message:
         mask = 0x80
         
         if mask & char:
-            for i in range(64 * 8):
-                file.write(str(int(amplitude + math.sin(i*2*math.pi/4)   * amplitude ))  + "\n")
+            for i in range(64 * symbol_len):
+                file.write(str(int(amplitude + math.cos(i*2*math.pi/4)   * amplitude ))  + "\n")
     
         else:
-            for i in range(64 * 8):
+            for i in range(64 * symbol_len):
                 file.write(str(int(amplitude + math.sin(i*2*math.pi/8)  * amplitude ))  + "\n")
         
         char <<= 1
 
-for i in range(5000):
+for i in range(64*8*symbol_len*2):
     file.write(str(int(amplitude + math.sin(i*2*math.pi/8) * amplitude ))  + "\n")
