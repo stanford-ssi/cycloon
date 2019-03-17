@@ -5,7 +5,7 @@
 typedef unsigned char symbol;
 #define SYMBOL_LEN sizeof(symbol)*8
 
-#define THRESHHOLD 8
+#define THRESHHOLD 4
 
 int analogRead();
 
@@ -30,12 +30,21 @@ void get_intensity(unsigned int * bit0, unsigned int * bit1) {
     int s[FILTER_LEN];
     read_samples(s);
     int sin0 = 0, cos0 = 0, sin1 = 0, cos1 = 0;
-    for (int i = 0; i < FILTER_LEN >> 3; i++) {
-        int idx = i << 3;
+    for (int idx = 0; idx < FILTER_LEN; idx++) {
+        cos0 += s[idx];                 cos1 += s[idx];                 idx++;
+        cos0 += s[idx]; sin0 += s[idx];                 sin1 += s[idx]; idx++;
+                        sin0 += s[idx]; cos1 -= s[idx];                 idx++;
+        cos0 -= s[idx]; sin0 += s[idx];                 sin1 -= s[idx]; idx++;
+        cos0 -= s[idx];                 cos1 += s[idx];                 idx++;
+        cos0 -= s[idx]; sin0 -= s[idx];                 sin1 += s[idx]; idx++;
+                        sin0 -= s[idx]; cos1 -= s[idx];                 idx++;
+        cos0 += s[idx]; sin0 -= s[idx];                 sin1 -= s[idx];
+
+/*
         cos0 = cos0 + s[idx] + s[idx+1] - s[idx + 3] - s[idx + 4] - s[idx + 5] + s[idx + 7];
         sin0 = sin0 + s[idx+1] + s[idx+2] + s[idx + 3] - s[idx + 5] - s[idx + 6] - s[idx + 7];
         cos1 = cos1 + s[idx] - s[idx+2] + s[idx+4] - s[idx+6];
-        sin1 = sin1 + s[idx+1] - s[idx+3] + s[idx+5] - s[idx+7]; 
+        sin1 = sin1 + s[idx+1] - s[idx+3] + s[idx+5] - s[idx+7];*/
     }
     *bit0 = abs(cos0) + abs(sin0);
     *bit1 = abs(cos1) + abs(sin1);
@@ -49,25 +58,15 @@ void wait_for_packet() {
     for (int i = 0; i < SYMBOL_LEN; i++) window[i] = 0;
     int index = 0;
     int past_reading = 0;
-    //int last_window = 0;
-    //int curr_window = 0;
     int last_change = 0;
     int curr_change = 0;
     while(1) { 
         past_reading = window[index];
-        window[index] = get_bit0_intensity();
-        //curr_window = 0;
-        //for (int i = 0; i < SYMBOL_LEN; i++) curr_window += window[i];        
-        //curr_change = curr_window - last_window;
-        
+        window[index] = get_bit0_intensity();       
         curr_change = window[index] - past_reading;
         if (curr_change < 0 && change_record == (symbol) ~0x0) return;
         change_record <<= 1;
         if (curr_change > 0) change_record |= 0x1U;
-        //printf("%d\n", curr_change);
-        /* && curr_change < (last_change << 1) */ 
-        //if (change_record == (symbol) ~0x0) return;
-        // last_window = curr_window;
         last_change = curr_change;
         index++;
         if (index == SYMBOL_LEN) index = 0;

@@ -56,17 +56,21 @@ for k in range(1, 32):
 '''
 symbol_len = 8
 
+def noise(i):
+    return 0.18 * math.sin(i*2*math.pi/11) + \
+                     0.18 * math.sin(i*2*math.pi/15) + math.sin(i*2*math.pi/2) + 0.6*math.sin(i*2*math.pi/6)
+
+
 for i in range(64 * symbol_len + 32):
-    file.write(str(0) + "\n")
+    file.write(str(noise(i) * amplitude) + "\n")
 
 for i in range(64 * symbol_len ):
-    file.write(str(int(amplitude + math.sin(i*2*math.pi/8)   * amplitude ))  + "\n")
+    file.write(str(int((1 + noise(i) + math.sin(i*2*math.pi/8)  ) * amplitude ))  + "\n")
 
 for i in range(64 * symbol_len ):
-    file.write(str(0)+ "\n")
+    file.write(str(noise(i) * amplitude)+ "\n")
 
-message = 'KF5MZO'
-print(len(message))
+message = 'KF5MZO HGHWDJVBHJVVHBJEVJKVBJKVBHWRJKRJBVWRLVBHVWRVKJKVDFGHJKLJHGFDFDFGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG'
 
 for char in message:
     char = ord(char)
@@ -75,11 +79,11 @@ for char in message:
         
         if mask & char:
             for i in range(64 * symbol_len):
-                file.write(str(int(amplitude + math.cos(i*2*math.pi/4)   * amplitude ))  + "\n")
+                file.write(str(int( (1 + math.cos(i*2*math.pi/4) + noise(i)) * amplitude ))  + "\n")
     
         else:
             for i in range(64 * symbol_len):
-                file.write(str(int(amplitude + math.sin(i*2*math.pi/8)  * amplitude ))  + "\n")
+                file.write(str(int( ( 1 + math.sin(i*2*math.pi/8)  + noise(i)) * amplitude ))  + "\n")
         
         char <<= 1
 
