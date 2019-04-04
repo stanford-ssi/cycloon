@@ -14,6 +14,7 @@
 #include <IridiumSBD.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
+#include <Adafruit_BNO055.h>
 
 // GPS
 #define gpsPort Serial1
@@ -26,8 +27,14 @@ IridiumSBD modem(IridiumSerial);
 // BMP
  Adafruit_BMP280 bme;
 
+ // BNO
+Adafruit_BNO055 bno = Adafruit_BNO055(55);
+
 
 int seconds = 80;  // Seconds since last transmission; initialized to send 40 seconds after first initialization
+int totalTime = 0;  // Total time in seconds since turning on
+int minTransTime = 120; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 240; // Will try to send if greater than this regardless of signal quality
 
 static void smartdelay(unsigned long ms) {
   unsigned long start = millis();
@@ -66,6 +73,11 @@ void setup() {
   // Initialize bmp
   bme.begin();
 
+  // Initialize bno
+  bno.begin();
+  /* Use external crystal for better accuracy */
+  bno.setExtCrystalUse(true);
+
   // Initialize RockBlock
   IridiumSerial.begin(19200);
 
@@ -94,6 +106,13 @@ void setup() {
 void loop() {
   
   delay(1000);
+
+  // Getting data from BNO absolute orientation sensor
+  sensors_event_t event;
+  bno.getEvent(&event);
+  float x = event.orientation.x;
+  float y = event.orientation.y;
+  float z = event.orientation.z;
 
   // Getting data from BMP
   float bmp_temp = bme.readTemperature();
@@ -148,7 +167,7 @@ void loop() {
   if (err == ISBD_SUCCESS) {
     // Only sends if at least 2 minutes has passed since last transmission, and signal quality is 3 and above
     // or if at least 4 minutes has passed since last transmission and signal quality is not 0
-    if ((signalQuality > 2 || (signalQuality > 0 && seconds >= 240)) && seconds >= 120) {
+    if ((signalQuality > 2 || (signalQuality > 0 && seconds >= maxTransTime)) && seconds >= minTransTime) {
       char tmp[] = "Signal quality is currently: ";
       Serial.println(tmp);
       Serial.println(signalQuality);
@@ -176,6 +195,12 @@ void loop() {
   }
   
    delay(19000); // plus 1000 from smart delay = 20 seconds
-  
+
   seconds += 20;
+  totalTime += 20;
+
+  if(totalTime >= 21600) {
+    minTransTime = 3600;
+    maxTransTime = 3600;
+  }
 }
