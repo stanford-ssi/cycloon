@@ -150,16 +150,16 @@ void loop() {
   // Vital method for GPS; do not remove!
   smartdelay(1000);
 
-  // Data to be sent: temp, pressure, BMP altitude, GPS latitude, GPS longitude, GPS altitude
+  // Data to be sent: temp, pressure, BMP altitude, GPS latitude, GPS longitude, GPS altitude, orientation x-y-z
   char buff[20] = "";
-  char toSend[60] = "";
+  char toSend[70] = "";
   dtostrf(bmp_temp, 5, 1, buff);
   strcat(toSend, buff);
   strcat(toSend, ",");
   dtostrf(pres, 6, 0, buff);
   strcat(toSend, buff);
   strcat(toSend, ",");
-  dtostrf(bmp_alt, 6, 0, buff);
+  dtostrf(bmp_alt, 6 , 0, buff);
   strcat(toSend, buff);
   strcat(toSend, ",");
   dtostrf(flat, 10, 5, buff);
@@ -169,6 +169,15 @@ void loop() {
   strcat(toSend, buff);
   strcat(toSend, ",");
   dtostrf(gps_alt, 7, 1, buff);
+  strcat(toSend, buff);
+  strcat(toSend, ",");
+  dtostrf(x, 5, 1, buff);
+  strcat(toSend, buff);
+  strcat(toSend, ",");
+  dtostrf(y, 5, 1, buff);
+  strcat(toSend, buff);
+  strcat(toSend, ",");
+  dtostrf(z, 5, 1, buff);
   strcat(toSend, buff);
 
 
