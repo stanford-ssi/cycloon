@@ -30,11 +30,10 @@ IridiumSBD modem(IridiumSerial);
  // BNO
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
-
-int seconds = 80;  // Seconds since last transmission; initialized to send 40 seconds after first initialization
+int minTransTime = 300; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 600; // Will try to send if greater than this regardless of signal quality
+int seconds = minTransTime - 40;  // Seconds since last transmission; initialized to send 40 seconds after first initialization
 int totalTime = 0;  // Total time in seconds since turning on
-int minTransTime = 120; // Will try to send if greater than this and signal quality > 2
-int maxTransTime = 240; // Will try to send if greater than this regardless of signal quality
 
 static void smartdelay(unsigned long ms) {
   unsigned long start = millis();
@@ -214,13 +213,13 @@ void loop() {
     }
   }
   
-  delay(19000); // plus 1000 from smart delay = 20 seconds
+  delay(29000); // plus 1000 from smart delay = 30 seconds
 
-  seconds += 20;
-  totalTime += 20;
+  seconds += 30;
+  totalTime += 30;
 
   if(totalTime >= 21600) {
-    minTransTime = 3600;
-    maxTransTime = 3600;
+    minTransTime = 1800;
+    maxTransTime = 1800;
   }
 }
