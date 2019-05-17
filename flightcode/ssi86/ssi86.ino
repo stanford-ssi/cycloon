@@ -36,12 +36,24 @@ static void print_date(TinyGPS &gps);
 static void initializeRockBlock();
 static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime);
 static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime, uint8_t *rxbuf);
-static void drop(uint8_t seconds) {return;}
+static void drop(uint8_t seconds) {
+  
+  Serial.print("Dropping for seconds: ");
+  Serial.println(seconds);
+  
+  Serial.println("Starting motor");
+  digitalWrite(23, HIGH);
+  delay(1000 * (int) seconds);
+  
+  Serial.println("Stopping motor"); 
+  digitalWrite(23, LOW);
+  
+}
 
 void setup() {
   
   Serial.begin(38400);
-  while (!Serial);
+  // while (!Serial);
   Serial.println("Starting setup");
     
   //Initialize GPS port
@@ -59,6 +71,11 @@ void setup() {
   // Initialize RockBlock modem
   initializeRockBlock();
   Serial.println("Rockblock ready");
+
+  // Initialize ballast control pin
+  pinMode(23, OUTPUT);
+  drop(5);
+  Serial.println("Ballast pin ready");
 
 }
 
@@ -90,7 +107,6 @@ void loop() {
     secondsSince += rxbuf[0];
     droptime += rxbuf[0];
   }
-  
   delay(29000); // plus 1000 from smart delay = 30 seconds
 
   secondsSince += 30;
