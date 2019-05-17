@@ -26,8 +26,8 @@ IridiumSBD modem(IridiumSerial);
 // BMP
  Adafruit_BMP280 bme;
 
-int minTransTime = 0; // Will try to send if greater than this and signal quality > 2
-int maxTransTime = 0; // Will try to send if greater than this regardless of signal quality
+int minTransTime = 60; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 60; // Will try to send if greater than this regardless of signal quality
 int secondsSince = minTransTime;  // Seconds since last transmission; initialized to send 0 seconds after first initialization
 int droptime = 0;
 
@@ -156,35 +156,30 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
   dtostrf(gps_alt, 5, 0, buff);
   strcat(toSend, buff);
   strcat(toSend, ",");
-  dtostrf( (float) droptime, 4, 0, buff);
+  itoa(droptime, buff, 10);
   strcat(toSend, buff);
-  strcat(toSend, ",");
   Serial.print("String to send:");
   Serial.println(toSend);
   // Sending through RockBlock
   int signalQuality;
 
-  size_t rxbufsize=1;
+  size_t rxbufsize = 1;
   int err = modem.getSignalQuality(signalQuality);
   if (err == ISBD_SUCCESS) {
     // Only sends if at least minTransTime has passed since last transmission, and signal quality is 3 and above
     // or if at least maxTransTime has passed since last transmission and signal quality is not 0
-    char tmp[] = "Signal quality is currently:                      ";
-    Serial.print(tmp);
+    Serial.print("Signal quality is currently: ");
     Serial.println(signalQuality);
-    strcpy(tmp, "Time since last transmission is currently: ");
-    Serial.print(tmp);
+    Serial.print("Time since last transmission is currently: ");
     Serial.println(secondsSince);
     
     if (secondsSince >= minTransTime && (signalQuality > 2 || (signalQuality > 0 && secondsSince >= maxTransTime))) {
-      strcpy(tmp, "Trying to send.");
-      Serial.println(tmp);
+      Serial.println("Trying to send.");
 
-      err = modem.sendReceiveSBDText(toSend,  rxbuf, rxbufsize);
+      err = modem.sendReceiveSBDText(toSend, rxbuf, rxbufsize);
       //err = modem.sendSBDText(toSend);
       if (err == ISBD_SUCCESS) {
-        strcpy(tmp, "Hey, it worked!");
-        Serial.println(tmp);
+        Serial.println("Hey, it worked!");
         Serial.println(toSend);
         Serial.print("Received value: ");
         Serial.println(rxbuf[0]);
@@ -193,8 +188,7 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
         Serial.println("Could not send");
       }
     } else {
-      strcpy(tmp, "Not trying to send.");
-      Serial.println(tmp);
+      Serial.println("Not trying to send.");
     }
   } else {
     Serial.println("Modem error");
@@ -215,8 +209,7 @@ static void print_date(TinyGPS &gps) {
   unsigned long age;
   gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age);
   if (age == TinyGPS::GPS_INVALID_AGE) {
-    char tmp[] = "GPS NO SIGNAL";
-    Serial.println(tmp);
+    Serial.println("GPS NO SIGNAL");
   } else {
     char sz[32] = "";
     sprintf(sz, "%02d/%02d/%02d %02d:%02d:%02d ",
