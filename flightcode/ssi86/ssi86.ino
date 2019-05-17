@@ -134,7 +134,7 @@ static void initializeRockBlock() {
 
 
 static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime, uint8_t *rxbuf) {
-  // Data to be sent: temp, pressure, BMP altitude, GPS latitude, GPS longitude, GPS altitude
+  // Data to be sent: temp, pressure, BMP altitude, GPS latitude, GPS longitude, GPS altitude, droptime
   char buff[20] = "";
   char toSend[49] = "";
   toSend[48] = '\0';
@@ -160,6 +160,24 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
   strcat(toSend, buff);
   Serial.print("String to send:");
   Serial.println(toSend);
+
+  // Convert each float to 4 bytes plus 4 for droptime - total of 28 bytes
+  //uint8_t sendArray[28];
+  //memcpy(&bmp_temp, &sendArray[0], 4);
+  //memcpy(&pres, &sendArray[4], 4);
+  //memcpy(&bmp_alt, &sendArray[8], 4);
+  //memcpy(&flat, &sendArray[12], 4);
+  //memcpy(&flon, &sendArray[16], 4);
+  //memcpy(&gps_alt, &sendArray[20], 4);
+  //memcpy(&droptime, &sendArray[24], 4);
+    
+  //for(uint8_t i = 0; i < 28; i++) {
+  //  Serial.print("sendArray[");
+  //  Serial.print(i);
+  //  Serial.print("] = ");
+  //  Serial.println(sendArray[i]);
+  //}
+  
   // Sending through RockBlock
   int signalQuality;
 
@@ -176,6 +194,7 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
     if (secondsSince >= minTransTime && (signalQuality > 2 || (signalQuality > 0 && secondsSince >= maxTransTime))) {
       Serial.println("Trying to send.");
 
+      //err = modem.sendReceiveSBDBinary(sendArray, sizeof(sendArray), rxbuf, rxbufsize);
       err = modem.sendReceiveSBDText(toSend, rxbuf, rxbufsize);
       //err = modem.sendSBDText(toSend);
       if (err == ISBD_SUCCESS) {
