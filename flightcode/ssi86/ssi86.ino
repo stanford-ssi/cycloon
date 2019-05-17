@@ -26,8 +26,8 @@ IridiumSBD modem(IridiumSerial);
 // BMP
  Adafruit_BMP280 bme;
 
-int minTransTime = 60; // Will try to send if greater than this and signal quality > 2
-int maxTransTime = 60; // Will try to send if greater than this regardless of signal quality
+int minTransTime = 240; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 480; // Will try to send if greater than this regardless of signal quality
 int secondsSince = minTransTime;  // Seconds since last transmission; initialized to send 0 seconds after first initialization
 int droptime = 0;
 
@@ -52,7 +52,11 @@ static void drop(uint8_t seconds) {
 
 void setup() {
   
+  delay(1000);
   Serial.begin(38400);
+  
+  delay(1000);
+  
   // while (!Serial);
   Serial.println("Starting setup");
     
@@ -221,6 +225,7 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
         secondsSince = 0;
       } else {
         Serial.println("Could not send");
+        secondsSince += 30;
       }
     } else {
       Serial.println("Not trying to send.");
