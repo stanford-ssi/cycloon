@@ -7,3 +7,6 @@ setkey(iridium, id)
 setkey(transmissions, id)
 joined <- merge(iridium, transmissions, all=TRUE)
 fwrite(joined, "joinedData.csv")
+
+filtered <- subset(joined, iridium_cep <= 10)
+fwrite(filtered, "filteredData.csv")
