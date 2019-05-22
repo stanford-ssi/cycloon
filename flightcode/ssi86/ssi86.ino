@@ -26,8 +26,8 @@ IridiumSBD modem(IridiumSerial);
 // BMP
  Adafruit_BMP280 bme;
 
-int minTransTime = 60; // Will try to send if greater than this and signal quality > 2
-int maxTransTime = 60; // Will try to send if greater than this regardless of signal quality
+int minTransTime = 240; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 480; // Will try to send if greater than this regardless of signal quality
 int secondsSince = minTransTime;  // Seconds since last transmission; initialized to send 0 seconds after first initialization
 int droptime = 0;
 
@@ -36,12 +36,28 @@ static void print_date(TinyGPS &gps);
 static void initializeRockBlock();
 static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime);
 static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime, uint8_t *rxbuf);
-static void drop(uint8_t seconds) {return;}
+static void drop(uint8_t seconds) {
+  
+  Serial.print("Dropping for seconds: ");
+  Serial.println(seconds);
+  
+  Serial.println("Starting motor");
+  digitalWrite(23, HIGH);
+  delay(1000 * (int) seconds);
+  
+  Serial.println("Stopping motor"); 
+  digitalWrite(23, LOW);
+  
+}
 
 void setup() {
   
+  delay(1000);
   Serial.begin(38400);
-  while (!Serial);
+  
+  delay(1000);
+  
+  // while (!Serial);
   Serial.println("Starting setup");
     
   //Initialize GPS port
@@ -59,6 +75,11 @@ void setup() {
   // Initialize RockBlock modem
   initializeRockBlock();
   Serial.println("Rockblock ready");
+
+  // Initialize ballast control pin
+  pinMode(23, OUTPUT);
+  drop(5);
+  Serial.println("Ballast pin ready");
 
 }
 
@@ -90,7 +111,6 @@ void loop() {
     secondsSince += rxbuf[0];
     droptime += rxbuf[0];
   }
-  
   delay(29000); // plus 1000 from smart delay = 30 seconds
 
   secondsSince += 30;
@@ -205,6 +225,7 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
         secondsSince = 0;
       } else {
         Serial.println("Could not send");
+        secondsSince += 30;
       }
     } else {
       Serial.println("Not trying to send.");
