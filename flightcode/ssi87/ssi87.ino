@@ -52,7 +52,7 @@ static void drop(uint8_t seconds) {
 }
 
 static void vent(uint8_t seconds) {
-  Serial.print("Dropping for seconds: ");
+  Serial.print("Venting for seconds: ");
   Serial.println(seconds);
   return;
 }
@@ -69,7 +69,7 @@ void setup() {
     
   //Initialize GPS port
   Serial1.begin(9600);
-  Serial.println("GPS ready");
+  Serial.println("GPS maybe ready");
   
   // Initialize bmp
   if(bme.begin()) {
@@ -133,13 +133,13 @@ void loop() {
   if (rxbuf[2] > 0) {
     minTransTime = rxbuf[2]*60;
     Serial.print("Setting min time to seconds: ");
-    Serial.println(rxbuf[2]);
+    Serial.println(rxbuf[2]*60);
   }
   
   if (rxbuf[3] > 0) {
     maxTransTime = rxbuf[3]*60;
     Serial.print("Setting max time to seconds: ");
-    Serial.println(rxbuf[3]);
+    Serial.println(rxbuf[3]*60);
   }
   
   
@@ -238,45 +238,56 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
   int signalQuality;
 
   size_t rxbufsize = 4;
-  int err = modem.getSignalQuality(signalQuality);
-  if (err == ISBD_SUCCESS) {
-    // Only sends if at least minTransTime has passed since last transmission, and signal quality is 3 and above
-    // or if at least maxTransTime has passed since last transmission and signal quality is not 0
-    Serial.print("Signal quality is currently: ");
-    Serial.println(signalQuality);
-    Serial.print("Time since last transmission is currently: ");
-    Serial.println(secondsSince);
-    
-    if (secondsSince >= minTransTime && (signalQuality > 2 || (signalQuality > 0 && secondsSince >= maxTransTime))) {
-      Serial.println("Trying to send.");
 
-      //err = modem.sendReceiveSBDBinary(sendArray, sizeof(sendArray), rxbuf, rxbufsize);
-      err = modem.sendReceiveSBDText(toSend, rxbuf, rxbufsize);
-      //err = modem.sendSBDText(toSend);
-      if (err == ISBD_SUCCESS) {
-        Serial.println("Hey, it worked!");
-        Serial.println(toSend);
-        Serial.print("Received ballast: ");
-        Serial.println(rxbuf[0]);
-        Serial.print("Received vent: ");
-        Serial.println(rxbuf[1]);
-        Serial.print("Received min: ");
-        Serial.println(rxbuf[2]);
-        Serial.print("Received max: ");
-        Serial.println(rxbuf[3]);
+  if (secondsSince >= minTransTime) {
+
+    int err = modem.getSignalQuality(signalQuality);
+    if (err == ISBD_SUCCESS) {
+    
+    
+      // Only sends if at least minTransTime has passed since last transmission, and signal quality is 3 and above
+      // or if at least maxTransTime has passed since last transmission and signal quality is not 0
+      Serial.print("Signal quality is currently: ");
+      Serial.println(signalQuality);
+      Serial.print("Time since last transmission is currently: ");
+      Serial.println(secondsSince);
+    
+      if (signalQuality > 2 || (signalQuality > 0 && secondsSince >= maxTransTime)) {
+        Serial.println("Trying to send.");
+
+        //err = modem.sendReceiveSBDBinary(sendArray, sizeof(sendArray), rxbuf, rxbufsize);
+        err = modem.sendReceiveSBDText(toSend, rxbuf, rxbufsize);
+        //err = modem.sendSBDText(toSend);
+        if (err == ISBD_SUCCESS) {
+          Serial.println("Hey, it worked!");
+          Serial.println(toSend);
+          Serial.print("Received ballast: ");
+          Serial.println(rxbuf[0]);
+          Serial.print("Received vent: ");
+          Serial.println(rxbuf[1]);
+          Serial.print("Received min: ");
+          Serial.println(rxbuf[2]);
+          Serial.print("Received max: ");
+          Serial.println(rxbuf[3]);
         
-        secondsSince = 0;
+          secondsSince = 0;
+        } else {
+          Serial.println("Could not send");
+          secondsSince += 30;
+        }
       } else {
-        Serial.println("Could not send");
-        secondsSince += 30;
+        Serial.println("Not trying to send.");
       }
     } else {
-      Serial.println("Not trying to send.");
-    }
+      Serial.println("Modem error");
+    }    
   } else {
-    Serial.println("Modem error");
+    Serial.print("Time since last transmission is currently: ");
+    Serial.println(secondsSince);
+    Serial.println("Not trying to send.");
   }
 }
+
 static void smartdelay(unsigned long ms) {
   unsigned long start = millis();
   do {
