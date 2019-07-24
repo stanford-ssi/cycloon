@@ -26,8 +26,8 @@ IridiumSBD modem(IridiumSerial);
 // BMP
  Adafruit_BMP280 bme;
 
-int minTransTime = 4*60; // Will try to send if greater than this and signal quality > 2
-int maxTransTime = 8*60; // Will try to send if greater than this regardless of signal quality
+int minTransTime = 0*60; // Will try to send if greater than this and signal quality > 2
+int maxTransTime = 0*60; // Will try to send if greater than this regardless of signal quality
 int secondsSince = minTransTime;  // Seconds since last transmission; initialized to send 0 seconds after first initialization
 int droptime = 0;
 int venttime = 0;
@@ -35,8 +35,8 @@ int venttime = 0;
 static void smartdelay(unsigned long ms);
 static void print_date(TinyGPS &gps);
 static void initializeRockBlock();
-static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime);
-static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime, int venttime, uint8_t *rxbuf);
+static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt);
+static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, uint8_t *rxbuf);
 static void drop(uint8_t seconds) {
   
   Serial.print("Dropping for seconds: ");
@@ -54,6 +54,28 @@ static void drop(uint8_t seconds) {
 static void vent(uint8_t seconds) {
   Serial.print("Venting for seconds: ");
   Serial.println(seconds);
+  Serial.println("Starting motor OPEN");
+  digitalWrite(22, HIGH);
+  delay(1500);
+  digitalWrite(21, HIGH);
+  delay(50);
+  Serial.println("Stopping motor OPEN");
+  digitalWrite(22, LOW);
+  digitalWrite(21, LOW);
+
+
+  delay(1000 * (int) seconds);
+
+  Serial.println("Starting motor CLOSE");
+  digitalWrite(21, HIGH);
+  delay(2000);
+  digitalWrite(22, HIGH);
+  delay(50);
+  Serial.println("Stopping motor CLOSE");
+  digitalWrite(21, LOW);
+  digitalWrite(22, LOW);
+
+  
   return;
 }
 
@@ -92,6 +114,8 @@ void setup() {
   Serial.println("Ballast pin ready");
 
   // Initialize vent control pin
+  pinMode(21, OUTPUT);
+  pinMode(22, OUTPUT);
   vent(5);
   Serial.println("Vent pin ready");
 
@@ -117,9 +141,9 @@ void loop() {
   Serial.println(stars);
   print_date(gps);
 
-  printData(bmp_temp, pres, bmp_alt, flat, flon, gps_alt, droptime);  
+  printData(bmp_temp, pres, bmp_alt, flat, flon, gps_alt);  
   uint8_t rxbuf[4] = {0, 0, 0, 0};
-  tryRB(bmp_temp, pres, bmp_alt, flat, flon, gps_alt, droptime, venttime, rxbuf);
+  tryRB(bmp_temp, pres, bmp_alt, flat, flon, gps_alt, rxbuf);
   if (rxbuf[0] > 0) {
     drop(rxbuf[0]);
     secondsSince += rxbuf[0];
@@ -149,7 +173,7 @@ void loop() {
 }
 
 
-static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime) {
+static void printData(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt) {
   Serial.print("bmp temperature = ");
   Serial.println(bmp_temp); // BMP Temperature
   Serial.print("bmp pressure = ");
@@ -165,6 +189,12 @@ static void printData(float bmp_temp, float pres, float bmp_alt, float flat, flo
   Serial.println(gps_alt); // GPS Altitude
   Serial.print("droptime = ");
   Serial.println(droptime);
+  Serial.print("venttime = ");
+  Serial.println(venttime);
+  Serial.print("mintime = ");
+  Serial.println(minTransTime);
+  Serial.print("maxtime = ");
+  Serial.println(maxTransTime);
 }
 
 static void initializeRockBlock() {
@@ -185,7 +215,7 @@ static void initializeRockBlock() {
 }
 
 
-static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, int droptime, int venttime, uint8_t *rxbuf) {
+static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float flon, float gps_alt, uint8_t *rxbuf) {
   // Data to be sent: temp, pressure, BMP altitude, GPS latitude, GPS longitude, GPS altitude, droptime
   char buff[20] = "";
   char toSend[49] = "";
@@ -208,12 +238,11 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
   dtostrf(gps_alt, 5, 0, buff);
   strcat(toSend, buff);
   strcat(toSend, ",");
-  itoa(droptime, buff, 4);
+  itoa(droptime, buff, 10);
   strcat(toSend, buff);
   strcat(toSend, ",");
-  itoa(venttime, buff, 4);
+  itoa(venttime, buff, 10);
   strcat(toSend, buff);
-  strcat(toSend, ",");
   Serial.print("String to send:");
   Serial.println(toSend);
 
