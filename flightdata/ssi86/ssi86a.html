@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+         <style type="text/css">
+ 		html { height: 100% }
+	    body { height: 100%; margin: 0; padding: 0 }            
+		#map{
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style> 
+    </head>
+    <body>
+        <div id="map" style="float: left;"></div>       
+        <!-- bring in the google maps library -->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript">
+            //Google maps API initialisation
+            var element = document.getElementById("map");
+            var map = new google.maps.Map(element, {
+                center: new google.maps.LatLng(36.8492,-121.432),zoom:7 ,
+                mapTypeId: "OSM",      
+            });
+            google.maps.event.addListener(map, 'click', function (event) {
+              displayCoordinates(event.latLng);               
+            });
+ 
+            //Define OSM map type pointing at the OpenStreetMap tile server
+            map.mapTypes.set("OSM", new google.maps.ImageMapType({
+                getTileUrl: function(coord, zoom) {
+                    // "Wrap" x (longitude) at 180th meridian properly
+                    // NB: Don't touch coord.x: because coord param is by reference, and changing its x property breaks something in Google's lib
+                  var tilesPerGlobe = 1 << zoom;
+                    var x = coord.x % tilesPerGlobe;
+                    if (x < 0) {
+                        x = tilesPerGlobe+x;
+                    }
+                    // Wrap y (latitude) in a like manner if you want to enable vertical infinite scrolling
+
+                    return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
+                },
+                tileSize: new google.maps.Size(256, 256),
+                name: "OpenStreetMap",
+                maxZoom: 18
+            }));
+var flightPlanCoordinates0 = [ 
+{lat: 36.849000000000004, lng: -121.43299999999999},
+{lat: 36.848, lng: -121.432},
+{lat: 36.846, lng: -121.42399999999999},
+{lat: 36.842, lng: -121.416},
+{lat: 36.839, lng: -121.412},
+{lat: 36.835, lng: -121.406},
+{lat: 36.832, lng: -121.397},
+{lat: 36.83, lng: -121.39},
+{lat: 36.838, lng: -121.39},
+{lat: 36.844, lng: -121.39200000000001},
+{lat: 36.86, lng: -121.385},
+{lat: 36.875, lng: -121.383},
+{lat: 36.895, lng: -121.376},
+{lat: 36.915, lng: -121.363},
+{lat: 36.936, lng: -121.34700000000001},
+{lat: 36.961, lng: -121.331},
+{lat: 36.986, lng: -121.31200000000001},
+{lat: 37.013000000000005, lng: -121.29299999999999},
+{lat: 37.044000000000004, lng: -121.274},
+{lat: 37.085, lng: -121.255},
+{lat: 37.128, lng: -121.236},
+{lat: 37.169000000000004, lng: -121.215},
+{lat: 37.209, lng: -121.19200000000001},
+{lat: 37.247, lng: -121.175},
+{lat: 37.288000000000004, lng: -121.149},
+{lat: 37.33, lng: -121.1},
+{lat: 37.378, lng: -121.042},
+{lat: 37.417, lng: -120.99700000000001},
+{lat: 37.461999999999996, lng: -120.97},
+{lat: 37.505, lng: -120.955},
+{lat: 37.548, lng: -120.947},
+{lat: 37.583, lng: -120.943},
+{lat: 37.61, lng: -120.93299999999999},
+{lat: 37.637, lng: -120.926},
+{lat: 37.664, lng: -120.915},
+{lat: 37.689, lng: -120.91},
+{lat: 37.713, lng: -120.90799999999999},
+{lat: 37.735, lng: -120.906},
+{lat: 37.758, lng: -120.9},
+{lat: 37.783, lng: -120.896},
+{lat: 37.808, lng: -120.889},
+{lat: 37.836, lng: -120.88},
+{lat: 37.864000000000004, lng: -120.876},
+{lat: 37.893, lng: -120.87299999999999},
+{lat: 37.923, lng: -120.869},
+{lat: 37.955999999999996, lng: -120.861},
+{lat: 37.994, lng: -120.859},
+{lat: 38.037, lng: -120.86200000000001},
+{lat: 38.082, lng: -120.868},
+{lat: 38.126, lng: -120.87200000000001},
+{lat: 38.157, lng: -120.875},
+{lat: 38.183, lng: -120.87899999999999},
+{lat: 38.207, lng: -120.87899999999999},
+{lat: 38.228, lng: -120.876},
+{lat: 38.24, lng: -120.86200000000001},
+{lat: 38.256, lng: -120.84299999999999},
+{lat: 38.269, lng: -120.821},
+{lat: 38.277, lng: -120.79899999999999},
+{lat: 38.283, lng: -120.77600000000001},
+{lat: 38.289, lng: -120.757},
+{lat: 38.306, lng: -120.73899999999999},
+{lat: 38.321999999999996, lng: -120.72},
+{lat: 38.336999999999996, lng: -120.705},
+{lat: 38.353, lng: -120.68299999999999},
+{lat: 38.356, lng: -120.675},
+
+        ];
+        var flightPath0 = new google.maps.Polyline({
+          path: flightPlanCoordinates0,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath0.setMap(map);
+        </script>
+    <div id="map_canvas" style="width:80%; height:100%"></div>
+    <div id="info" style="padding-left:2ch; padding-right: 2ch">
+
+      <div>
+   
+
+
+      </div>
+    </div>
+    
+</body>
+</html>

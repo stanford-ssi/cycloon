@@ -1,0 +1,64 @@
+SSI-86APP [9:36 AM]
+Status: Sent: OK,208478 (id 1140)
+
+`10`
+
+
+SSI-86APP [9:48 AM]
+Status: Sent: OK,208479 (id 1141)
+
+`10`
+
+Sydney Marler [9:49 AM]
+#balloons-cy-flops
+Here we go
+
+SSI-86APP [10:07 AM]
+Status: Sent: OK,208481 (id 1142)
+
+`10`
+
+Jillian Tang [11:23 AM]
+Were here
+/doorbell
+:bellhop_bell:
+ESIII Doorbell ServiceAPP [11:23 AM]
+DING DONG! If anyone is in ESIII right now, they should let you in soon. Meet them by the south service road entrance. =)
+
+SSI-86APP [12:22 PM]
+Status: Sent: OK,208498 (id 1143)
+
+`10`
+
+SSI-86APP [12:32 PM]
+Status: Sent: OK,208499 (id 1144)
+
+`05`
+
+SSI-86APP [1:49 PM]
+Status: Sent: OK,208502 (id 1145)
+
+`10`
+
+SSI-86APP [1:57 PM]
+Status: Sent: OK,208503 (id 1146)
+
+`20`
+
+SSI-86APP [2:08 PM]
+Status: Sent: OK,208507 (id 1147)
+
+`10`
+Status: Sent: OK,208508 (id 1148)
+
+`10`
+
+SSI-86APP [2:21 PM]
+Status: Sent: OK,208509 (id 1149)
+
+`05`
+
+SSI-86APP [2:46 PM]
+Status: Sent: OK,208510 (id 1150)
+
+`10`

@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+        <title>HABSIM</title>
+         <style type="text/css">
+ 		html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+		
+		 #info {
+        position: absolute;
+        width:10%;
+        height:100%;
+        overflow-y: scroll;
+        overflow-x: scroll;
+        bottom:0px;
+        right:0px;
+        top:0px;
+        background-color: white;
+        border-left:1px #666 solid;
+        font-family:Helvetica; }
+            
+		#map{
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+  
+        </style> 
+    </head>
+    <body>
+        <div id="map" style="float: left;"></div>       
+        
+        
+        <!-- bring in the google maps library -->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        
+        <script type="text/javascript">
+            //Google maps API initialisation
+            var element = document.getElementById("map");
+ 
+            var map = new google.maps.Map(element, {
+                center: new google.maps.LatLng(37.179,-122.39 ),
+                zoom: 9,
+                mapTypeId: "OSM",
+              
+            });
+
+
+            google.maps.event.addListener(map, 'click', function (event) {
+              displayCoordinates(event.latLng);               
+            });
+
+            function displayCoordinates(pnt) {
+
+                var lat = pnt.lat();
+                lat = lat.toFixed(4);
+                var lng = pnt.lng();
+                lng = lng.toFixed(4);
+
+
+                document.getElementById("lat").value = lat;
+
+                document.getElementById("lon").value = lng;
+
+
+            }
+ 
+            //Define OSM map type pointing at the OpenStreetMap tile server
+            map.mapTypes.set("OSM", new google.maps.ImageMapType({
+                getTileUrl: function(coord, zoom) {
+                    // "Wrap" x (longitude) at 180th meridian properly
+                    // NB: Don't touch coord.x: because coord param is by reference, and changing its x property breaks something in Google's lib
+                  var tilesPerGlobe = 1 << zoom;
+                    var x = coord.x % tilesPerGlobe;
+                    if (x < 0) {
+                        x = tilesPerGlobe+x;
+                    }
+                    // Wrap y (latitude) in a like manner if you want to enable vertical infinite scrolling
+
+                    return "https://tile.openstreetmap.org/" + zoom + "/" + x + "/" + coord.y + ".png";
+                },
+                tileSize: new google.maps.Size(256, 256),
+                name: "OpenStreetMap",
+                maxZoom: 18
+            }));
+
+
+
+var marker = new google.maps.Marker({
+                position: {lat: 37.180137380463464, lng: -122.38397553819257},
+                label: " 1 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates20 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.180137380463464, lng: -122.38397553819257},
+
+        ];
+        var flightPath20 = new google.maps.Polyline({
+          path: flightPlanCoordinates20,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath20.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.179697837022786, lng: -122.38413708508229},
+                label: " 2 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates21 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.179697837022786, lng: -122.38413708508229},
+
+        ];
+        var flightPath21 = new google.maps.Polyline({
+          path: flightPlanCoordinates21,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath21.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.17963906011267, lng: -122.38360894541708},
+                label: " 3 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates22 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17963906011267, lng: -122.38360894541708},
+
+        ];
+        var flightPath22 = new google.maps.Polyline({
+          path: flightPlanCoordinates22,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath22.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.18042757842075, lng: -122.38487466203777},
+                label: " 4 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates23 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.18042757842075, lng: -122.38487466203777},
+
+        ];
+        var flightPath23 = new google.maps.Polyline({
+          path: flightPlanCoordinates23,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath23.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.179838876251054, lng: -122.38488330711728},
+                label: " 5 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates24 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.179838876251054, lng: -122.38488330711728},
+
+        ];
+        var flightPath24 = new google.maps.Polyline({
+          path: flightPlanCoordinates24,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath24.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.17998115059575, lng: -122.38370811209846},
+                label: " 6 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates25 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17998115059575, lng: -122.38370811209846},
+
+        ];
+        var flightPath25 = new google.maps.Polyline({
+          path: flightPlanCoordinates25,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath25.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.180513632546266, lng: -122.384010119544},
+                label: " 7 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates26 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.180513632546266, lng: -122.384010119544},
+
+        ];
+        var flightPath26 = new google.maps.Polyline({
+          path: flightPlanCoordinates26,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath26.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.18076140285298, lng: -122.38435298421443},
+                label: " 8 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates27 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.18076140285298, lng: -122.38435298421443},
+
+        ];
+        var flightPath27 = new google.maps.Polyline({
+          path: flightPlanCoordinates27,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath27.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.18094245010025, lng: -122.38497568971013},
+                label: " 9 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates28 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.18094245010025, lng: -122.38497568971013},
+
+        ];
+        var flightPath28 = new google.maps.Polyline({
+          path: flightPlanCoordinates28,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath28.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.17978327785283, lng: -122.38375901576055},
+                label: " 10 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates29 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17978327785283, lng: -122.38375901576055},
+
+        ];
+        var flightPath29 = new google.maps.Polyline({
+          path: flightPlanCoordinates29,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath29.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.1798738891281, lng: -122.38406071799959},
+                label: " 11 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates30 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.1798738891281, lng: -122.38406071799959},
+
+        ];
+        var flightPath30 = new google.maps.Polyline({
+          path: flightPlanCoordinates30,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath30.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.178998168340684, lng: -122.37780404377877},
+                label: " 12 ",
+                title:" 0.13333333333333333h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates31 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.178995782647384, lng: -122.38389469548483},
+{lat: 37.178998168340684, lng: -122.37780404377877},
+
+        ];
+        var flightPath31 = new google.maps.Polyline({
+          path: flightPlanCoordinates31,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath31.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.1787887887716, lng: -122.37834868804707},
+                label: " 13 ",
+                title:" 0.13333333333333333h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates32 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17889050848099, lng: -122.3841748449619},
+{lat: 37.1787887887716, lng: -122.37834868804707},
+
+        ];
+        var flightPath32 = new google.maps.Polyline({
+          path: flightPlanCoordinates32,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath32.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.18056653873408, lng: -122.3851427650565},
+                label: " 14 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates33 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.18056653873408, lng: -122.3851427650565},
+
+        ];
+        var flightPath33 = new google.maps.Polyline({
+          path: flightPlanCoordinates33,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath33.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.17988689049342, lng: -122.38393549728994},
+                label: " 15 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates34 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17988689049342, lng: -122.38393549728994},
+
+        ];
+        var flightPath34 = new google.maps.Polyline({
+          path: flightPlanCoordinates34,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath34.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.179288025971374, lng: -122.38378742121223},
+                label: " 16 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates35 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.179288025971374, lng: -122.38378742121223},
+
+        ];
+        var flightPath35 = new google.maps.Polyline({
+          path: flightPlanCoordinates35,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath35.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.1795146457307, lng: -122.38446495854608},
+                label: " 17 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates36 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.1795146457307, lng: -122.38446495854608},
+
+        ];
+        var flightPath36 = new google.maps.Polyline({
+          path: flightPlanCoordinates36,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath36.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.17952071010351, lng: -122.38367136904111},
+                label: " 18 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates37 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.17952071010351, lng: -122.38367136904111},
+
+        ];
+        var flightPath37 = new google.maps.Polyline({
+          path: flightPlanCoordinates37,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath37.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.180122312223304, lng: -122.38457297567669},
+                label: " 19 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates38 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.180122312223304, lng: -122.38457297567669},
+
+        ];
+        var flightPath38 = new google.maps.Polyline({
+          path: flightPlanCoordinates38,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath38.setMap(map);var marker = new google.maps.Marker({
+                position: {lat: 37.18010420780214, lng: -122.38409563053013},
+                label: " 20 ",
+                title:" 0.06666666666666667h "
+            });
+            // To add the marker to the map, call setMap();
+            marker.setMap(map);
+        var flightPlanCoordinates39 = [ 
+{lat: 37.179, lng: -122.39},
+{lat: 37.18010420780214, lng: -122.38409563053013},
+
+        ];
+        var flightPath39 = new google.maps.Polyline({
+          path: flightPlanCoordinates39,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath39.setMap(map);
+        </script>
+    <div id="map_canvas" style="width:80%; height:100%"></div>
+    <div id="info" style="padding-left:2ch; padding-right: 2ch">
+
+      <div>
+   
+Model time: 2019050518, launchtime: 201905060000<br/><br/>Model number: 1<br/>0.00h ,Loc=37.17900,-122.39000,u=4.448,v=1.054<br>
+0.07h ,Loc=37.18014,-122.38398,u=4.445,v=1.050<br>
+<br/><br/>Model number: 2<br/>0.00h ,Loc=37.17900,-122.39000,u=4.329,v=0.647<br>
+0.07h ,Loc=37.17970,-122.38414,u=4.325,v=0.650<br>
+<br/><br/>Model number: 3<br/>0.00h ,Loc=37.17900,-122.39000,u=4.718,v=0.592<br>
+0.07h ,Loc=37.17964,-122.38361,u=4.709,v=0.591<br>
+<br/><br/>Model number: 4<br/>0.00h ,Loc=37.17900,-122.39000,u=3.784,v=1.323<br>
+0.07h ,Loc=37.18043,-122.38487,u=3.792,v=1.311<br>
+<br/><br/>Model number: 5<br/>0.00h ,Loc=37.17900,-122.39000,u=3.778,v=0.777<br>
+0.07h ,Loc=37.17984,-122.38488,u=3.784,v=0.777<br>
+<br/><br/>Model number: 6<br/>0.00h ,Loc=37.17900,-122.39000,u=4.645,v=0.909<br>
+0.07h ,Loc=37.17998,-122.38371,u=4.635,v=0.907<br>
+<br/><br/>Model number: 7<br/>0.00h ,Loc=37.17900,-122.39000,u=4.422,v=1.403<br>
+0.07h ,Loc=37.18051,-122.38401,u=4.420,v=1.386<br>
+<br/><br/>Model number: 8<br/>0.00h ,Loc=37.17900,-122.39000,u=4.169,v=1.632<br>
+0.07h ,Loc=37.18076,-122.38435,u=4.163,v=1.619<br>
+<br/><br/>Model number: 9<br/>0.00h ,Loc=37.17900,-122.39000,u=3.709,v=1.800<br>
+0.07h ,Loc=37.18094,-122.38498,u=3.707,v=1.787<br>
+<br/><br/>Model number: 10<br/>0.00h ,Loc=37.17900,-122.39000,u=4.608,v=0.726<br>
+0.07h ,Loc=37.17978,-122.38376,u=4.600,v=0.734<br>
+<br/><br/>Model number: 11<br/>0.00h ,Loc=37.17900,-122.39000,u=4.385,v=0.810<br>
+0.07h ,Loc=37.17987,-122.38406,u=4.377,v=0.818<br>
+<br/><br/>Model number: 12<br/>0.00h ,Loc=37.17900,-122.39000,u=4.507,v=-0.004<br>
+0.07h ,Loc=37.17900,-122.38389,u=4.497,v=0.002<br>
+0.13h ,Loc=37.17900,-122.37780,u=4.486,v=0.008<br>
+<br/><br/>Model number: 13<br/>0.00h ,Loc=37.17900,-122.39000,u=4.301,v=-0.101<br>
+0.07h ,Loc=37.17889,-122.38417,u=4.301,v=-0.094<br>
+0.13h ,Loc=37.17879,-122.37835,u=4.302,v=-0.087<br>
+<br/><br/>Model number: 14<br/>0.00h ,Loc=37.17900,-122.39000,u=3.586,v=1.452<br>
+0.07h ,Loc=37.18057,-122.38514,u=3.595,v=1.442<br>
+<br/><br/>Model number: 15<br/>0.00h ,Loc=37.17900,-122.39000,u=4.477,v=0.822<br>
+0.07h ,Loc=37.17989,-122.38394,u=4.468,v=0.824<br>
+<br/><br/>Model number: 16<br/>0.00h ,Loc=37.17900,-122.39000,u=4.587,v=0.267<br>
+0.07h ,Loc=37.17929,-122.38379,u=4.582,v=0.272<br>
+<br/><br/>Model number: 17<br/>0.00h ,Loc=37.17900,-122.39000,u=4.086,v=0.477<br>
+0.07h ,Loc=37.17951,-122.38446,u=4.079,v=0.481<br>
+<br/><br/>Model number: 18<br/>0.00h ,Loc=37.17900,-122.39000,u=4.672,v=0.483<br>
+0.07h ,Loc=37.17952,-122.38367,u=4.661,v=0.495<br>
+<br/><br/>Model number: 19<br/>0.00h ,Loc=37.17900,-122.39000,u=4.007,v=1.040<br>
+0.07h ,Loc=37.18012,-122.38457,u=4.001,v=1.044<br>
+<br/><br/>Model number: 20<br/>0.00h ,Loc=37.17900,-122.39000,u=4.359,v=1.023<br>
+0.07h ,Loc=37.18010,-122.38410,u=4.352,v=1.025<br>
+<br/><br/>
+
+      </div>
+    </div>
+    
+</body>
+</html>
+
