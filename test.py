@@ -35,7 +35,7 @@ hours = [targettraj[i][0] for i in range(101)]
 lats = [targettraj[i][1] for i in range(101)]
 lons = [targettraj[i][2] for i in range(101)]
 
-for i in range(10):
+for i in range(1):
     pred.run(model=1)
     closest = hs.util.optimize_step(pred, hs.StaticTarget(40.7, -92.7), 20, decreasing_weights=False)
     print(profile)
