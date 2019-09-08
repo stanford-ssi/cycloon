@@ -1,4 +1,5 @@
 .vscode/*
 __pycache__/*
 res/*
+sims/.ipynb_checkpoints/*
 .Rhistory
