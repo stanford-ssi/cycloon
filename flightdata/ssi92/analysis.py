@@ -4,17 +4,17 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
-
+import time as t
+from datetime import datetime, timedelta
 
 data = pd.read_csv('rock7.csv')
-
+data.to_pickle('rock7.pkl')
 times = []
 timestamps = []
 alts = []
 bmpalts = []
 rates = [0]
-import time as t
-from datetime import datetime, timedelta
+
 
 for i in range(214, 45, -1):
     point = data.iloc[i]
