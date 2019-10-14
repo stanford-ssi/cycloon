@@ -8,9 +8,7 @@ import time as t
 from datetime import datetime, timedelta
 
 data = pd.read_csv('rock7.csv')
-data.to_pickle('rock7.pkl')
 times = []
-timestamps = []
 alts = []
 bmpalts = []
 rates = [0]
