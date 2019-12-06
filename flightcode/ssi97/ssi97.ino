@@ -57,25 +57,27 @@ static void vent(uint8_t seconds) {
   Serial.print("Venting for seconds: ");
   Serial.println(seconds);
   Serial.println("Starting motor OPEN");
-  digitalWrite(22, HIGH);
-  delay(1500);
   digitalWrite(21, HIGH);
+  delay(250);
+  digitalWrite(20, HIGH);
   delay(50);
   Serial.println("Stopping motor OPEN");
-  digitalWrite(22, LOW);
   digitalWrite(21, LOW);
+
+  digitalWrite(20, LOW);
 
 
   delay(1000 * (int) seconds);
 
   Serial.println("Starting motor CLOSE");
-  digitalWrite(21, HIGH);
-  delay(2000);
-  digitalWrite(22, HIGH);
-  delay(50);
+  digitalWrite(20, HIGH);
+  delay(250);
+  //digitalWrite(20, HIGH);
+  //delay(50);
   Serial.println("Stopping motor CLOSE");
-  digitalWrite(21, LOW);
-  digitalWrite(22, LOW);
+  digitalWrite(20, LOW);
+  //delay(50);
+  //digitalWrite(20, LOW);
 
   
   return;
@@ -93,7 +95,7 @@ void setup() {
     
   //Initialize GPS port
   Serial1.begin(9600);
-  Serial.println("GPS maybe ready");
+   Serial.println("GPS maybe ready");
   
   // Initialize bmp
   if(bme.begin()) {
@@ -117,7 +119,7 @@ void setup() {
 
   // Initialize vent control pin
   pinMode(21, OUTPUT);
-  pinMode(22, OUTPUT);
+  pinMode(20, OUTPUT);
   vent(5);
   Serial.println("Vent pin ready");
 
