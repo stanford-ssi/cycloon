@@ -23,7 +23,7 @@ ballast_times = []
 ballasts = []
 
 
-for i in range(70, 20, -1):
+for i in range(70, 22, -1):
     point = data.iloc[i]
     time = point["Date Time (UTC)"]
     time = datetime.strptime(time, '%d/%b/%Y %H:%M:%S') - timedelta(hours=7)
@@ -72,7 +72,12 @@ ax2.scatter(ballast_times, ballasts)
 ax2.set_ylabel('Ballast times (s)')
 ax2.xaxis.set_major_formatter(myFmt)
 
-for l in list(zip(times, alts, locs)): print(l)
+
+
+for l in list(zip(times, alts, locs, bmpalts)): print(l)
+
+for l in list(zip(ballast_times, ballasts)): print(l)
+
 
 plt.savefig('profile.png')
 plt.clf()
