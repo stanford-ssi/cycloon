@@ -125,6 +125,16 @@ void setup() {
 
 }
 
+void ventSequence(int t1, int t2, int t3, int wait)
+{
+  vent(t1);
+  delay(wait);
+  vent(t2);
+  delay(wait);
+  vent(t3);
+  delay(wait);
+}
+
 // Every 30 seconds
 void loop() {
 
@@ -170,8 +180,8 @@ void loop() {
     Serial.println(rxbuf[3]*60);
   }
   
-  
-  delay(29000); // plus 1000 from smart delay = 30 seconds
+  ventSequence(2,5,10,10000);
+  //delay(29000); // plus 1000 from smart delay = 30 seconds
 
   secondsSince += 30;
 }
