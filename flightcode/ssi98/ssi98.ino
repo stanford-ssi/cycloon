@@ -53,34 +53,53 @@ static void drop(uint8_t seconds) {
   
 }
 
+static void heaterOn(){
+  digitalWrite(3, HIGH);
+}
+
+static void heaterOff(){
+  digitalWrite(3, LOW);
+}
+
+static void resetGPS(){
+  Serial.print("Resetting GPS");
+  digitalWrite(5, LOW);
+  delay(1000 * (int) 5);
+  digitalWrite(5, HIGH);
+  return;
+}
+
 static void vent(uint8_t seconds) {
   Serial.print("Venting for seconds: ");
   Serial.println(seconds);
   Serial.println("Starting motor OPEN");
-  digitalWrite(21, HIGH);
+  analogWrite(21, 255);//open vent
   delay(250);
-  digitalWrite(20, HIGH);
+  analogWrite(20, 255);//start braking
   delay(50);
   Serial.println("Stopping motor OPEN");
-  digitalWrite(21, LOW);
-
-  digitalWrite(20, LOW);
+  analogWrite(21, 0);//depower
+  analogWrite(20, 0);
 
 
   delay(1000 * (int) seconds);
 
   Serial.println("Starting motor CLOSE");
-  digitalWrite(20, HIGH);
+  analogWrite(20, 255);
   delay(250);
-  //digitalWrite(20, HIGH);
-  //delay(50);
   Serial.println("Stopping motor CLOSE");
-  digitalWrite(20, LOW);
-  //delay(50);
-  //digitalWrite(20, LOW);
+  analogWrite(20, 180);
 
   
   return;
+}
+
+static void cutdown(uint8_t seconds)
+{
+  Serial.print("cutdown started");
+  digitalWrite(4, HIGH);
+  delay(seconds*1000);
+  digitalWrite(4, LOW);
 }
 
 void setup() {
@@ -120,9 +139,23 @@ void setup() {
   // Initialize vent control pin
   pinMode(21, OUTPUT);
   pinMode(20, OUTPUT);
-  vent(5);
   Serial.println("Vent pin ready");
 
+  //Heater init
+  pinMode(3, OUTPUT);
+
+  //GPS Reset pin
+  pinMode(5, OUTPUT);
+  digitalWrite(5, HIGH); //turn on GPS
+
+  //Cutdown pin
+  pinMode(4, OUTPUT);
+
+  //analogWrite(20,255);//start forcing vent closed
+
+
+  resetGPS();
+  delay(30000);
 }
 
 void ventSequence(int t1, int t2, int t3, int wait)
@@ -134,10 +167,14 @@ void ventSequence(int t1, int t2, int t3, int wait)
   vent(t3);
   delay(wait);
 }
+void firstVent()
+{
+  vent(30);
+  delay(30000);
+}
 
 // Every 30 seconds
 void loop() {
-
   // Getting data from BMP
   float bmp_temp = bme.readTemperature();
   float pres = bme.readPressure();
@@ -164,23 +201,23 @@ void loop() {
     droptime += rxbuf[0];
   }
   if (rxbuf[1] > 0) {
-    vent(rxbuf[1]);
-    secondsSince += rxbuf[1];
-    venttime += rxbuf[1];
+    minTransTime = rxbuf[1]*60;
+    maxTransTime = rxbuf[1]*60;
+    Serial.print("Setting min and max time to seconds: ");
+    Serial.println(rxbuf[1]*60);
   }
   if (rxbuf[2] > 0) {
-    minTransTime = rxbuf[2]*60;
-    Serial.print("Setting min time to seconds: ");
-    Serial.println(rxbuf[2]*60);
+    if (rxbuf[2] == (uint8_t) 1) heaterOn();
+    else if (rxbuf[2] == (uint8_t) 2) heaterOff();
+    else if (rxbuf[2] == (uint8_t) 3) resetGPS();
   }
-  
   if (rxbuf[3] > 0) {
-    maxTransTime = rxbuf[3]*60;
-    Serial.print("Setting max time to seconds: ");
-    Serial.println(rxbuf[3]*60);
+    cutdown(rxbuf[3]);
+    secondsSince += rxbuf[3];
   }
   
-  ventSequence(2,5,10,10000);
+  //ventSequence(10,30,60,000);
+  firstVent();
   //delay(29000); // plus 1000 from smart delay = 30 seconds
 
   secondsSince += 30;
@@ -260,23 +297,6 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
   Serial.print("String to send:");
   Serial.println(toSend);
 
-  // Convert each float to 4 bytes plus 4 for droptime - total of 28 bytes
-  //uint8_t sendArray[28];
-  //memcpy(&bmp_temp, &sendArray[0], 4);
-  //memcpy(&pres, &sendArray[4], 4);
-  //memcpy(&bmp_alt, &sendArray[8], 4);
-  //memcpy(&flat, &sendArray[12], 4);
-  //memcpy(&flon, &sendArray[16], 4);
-  //memcpy(&gps_alt, &sendArray[20], 4);
-  //memcpy(&droptime, &sendArray[24], 4);
-    
-  //for(uint8_t i = 0; i < 28; i++) {
-  //  Serial.print("sendArray[");
-  //  Serial.print(i);
-  //  Serial.print("] = ");
-  //  Serial.println(sendArray[i]);
-  //}
-  
   // Sending through RockBlock
   int signalQuality;
 
@@ -304,13 +324,13 @@ static void tryRB(float bmp_temp, float pres, float bmp_alt, float flat, float f
         if (err == ISBD_SUCCESS) {
           Serial.println("Hey, it worked!");
           Serial.println(toSend);
-          Serial.print("Received ballast: ");
+          Serial.print("Received rxbuf0: ");
           Serial.println(rxbuf[0]);
-          Serial.print("Received vent: ");
+          Serial.print("Received rxbuf1: ");
           Serial.println(rxbuf[1]);
-          Serial.print("Received min: ");
+          Serial.print("Received rxbuf2: ");
           Serial.println(rxbuf[2]);
-          Serial.print("Received max: ");
+          Serial.print("Received rxbuf3: ");
           Serial.println(rxbuf[3]);
         
           secondsSince = 0;
